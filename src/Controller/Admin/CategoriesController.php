@@ -1,6 +1,5 @@
 <?php
-namespace Code\Controller;
-
+namespace Code\Controller\Admin;
 
 use Ausi\SlugGenerator\SlugGenerator;
 use Code\Authenticator\CheckUserLogged;

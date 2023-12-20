@@ -1,6 +1,5 @@
 <?php
-namespace Code\Controller;
-
+namespace Code\Controller\Admin;
 
 use Code\Authenticator\CheckUserLogged;
 use Code\DB\Connection;
