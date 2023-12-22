@@ -2,7 +2,7 @@
 <div class="container">
 	<div class="col-md-12">
 		<h1>Produtos - <small>Gerencie seus produtos</small>
-            <a href="<?=HOME . '/products/new';?>" class="btn btn-success pull-right">Criar Novo Produto</a>
+            <a href="<?=HOME . '/admin/products/new';?>" class="btn btn-success pull-right">Criar Novo Produto</a>
         </h1>
 		<hr>
 	</div>
@@ -30,10 +30,10 @@
                 <td><?=number_format($p['price'], 2, ',', '.');?></td>
 				<td><?=date('d/m/Y H:i:s', strtotime($p['created_at']));?></td>
 				<td>
-					<a href="<?=HOME;?>/products/edit/<?=$p['id'];?>" class="btn btn-default">
+					<a href="<?=HOME;?>/admin/products/edit/<?=$p['id'];?>" class="btn btn-default">
 						Editar
 					</a>
-					<a href="<?=HOME;?>/products/remove/<?=$p['id'];?>" class="btn btn-danger">
+					<a href="<?=HOME;?>/admin/products/remove/<?=$p['id'];?>" class="btn btn-danger">
 						Excluir
 					</a>
 				</td>

@@ -3,7 +3,7 @@ namespace Code\Controller\Admin;
 
 use Code\View\View;
 use Code\DB\Connection;
-use Code\Entity\User;
+use Code\Entity\Product;
 
 class ProductsController
 {
@@ -13,5 +13,10 @@ class ProductsController
         $view->products = (new Product(Connection::getInstance()))->findAll();
         
         return $view->render();
+    }
+
+    public function new()
+    {
+        return (new View('admin/products/new.phtml'))->render();
     }
 }
