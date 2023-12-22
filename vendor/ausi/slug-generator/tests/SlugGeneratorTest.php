@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the ausi/slug-generator package.
  *
@@ -8,8 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-declare(strict_types=1);
 
 namespace Ausi\SlugGenerator\Tests;
 
@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SlugGeneratorTest extends TestCase
 {
-	public function testInstantiation()
+	public function testInstantiation(): void
 	{
 		$this->assertInstanceOf(SlugGenerator::class, new SlugGenerator);
 		$this->assertInstanceOf(SlugGenerator::class, new SlugGenerator([]));
@@ -30,14 +30,10 @@ class SlugGeneratorTest extends TestCase
 	}
 
 	/**
+	 * @param array<string,mixed> $options
 	 * @dataProvider getGenerate
-	 *
-	 * @param string $source
-	 * @param string $expected
-	 * @param array  $options
-	 * @param bool   $skip
 	 */
-	public function testGenerate(string $source, string $expected, array $options = [], bool $skip = false)
+	public function testGenerate(string $source, string $expected, array $options = [], bool $skip = false): void
 	{
 		if ($skip) {
 			$this->markTestSkipped();
@@ -51,14 +47,10 @@ class SlugGeneratorTest extends TestCase
 	}
 
 	/**
+	 * @param array<string,mixed> $options
 	 * @dataProvider getGenerate
-	 *
-	 * @param string $source
-	 * @param string $expected
-	 * @param array  $options
-	 * @param bool   $skip
 	 */
-	public function testGenerateWithIntlErrors(string $source, string $expected, array $options = [], bool $skip = false)
+	public function testGenerateWithIntlErrors(string $source, string $expected, array $options = [], bool $skip = false): void
 	{
 		$errorLevel = ini_get('intl.error_level');
 		$useExceptions = ini_get('intl.use_exceptions');
@@ -76,13 +68,13 @@ class SlugGeneratorTest extends TestCase
 			$this->testGenerate($source, $expected, $options, $skip);
 			$this->assertSame('1', ini_get('intl.use_exceptions'));
 		} finally {
-			ini_set('intl.error_level', $errorLevel);
-			ini_set('intl.use_exceptions', $useExceptions);
+			ini_set('intl.error_level', (string) $errorLevel);
+			ini_set('intl.use_exceptions', (string) $useExceptions);
 		}
 	}
 
 	/**
-	 * @return array
+	 * @return array<array>
 	 */
 	public function getGenerate(): array
 	{
@@ -260,22 +252,22 @@ class SlugGeneratorTest extends TestCase
 		];
 	}
 
-	public function testGenerateThrowsExceptionForNonUtf8Text()
+	public function testGenerateThrowsExceptionForNonUtf8Text(): void
 	{
 		$generator = new SlugGenerator;
 
 		$this->expectException(\InvalidArgumentException::class);
-		$this->expectExceptionMessageRegExp('(utf-?8)i');
+		$this->expectExceptionMatches('(utf-?8)i');
 
 		$generator->generate("\x80");
 	}
 
-	public function testGenerateThrowsExceptionForInvalidRule()
+	public function testGenerateThrowsExceptionForInvalidRule(): void
 	{
 		$generator = new SlugGenerator;
 
 		$this->expectException(\InvalidArgumentException::class);
-		$this->expectExceptionMessageRegExp('("invalid rule".*"de_AT")');
+		$this->expectExceptionMatches('("invalid rule".*"de_AT")');
 
 		$generator->generate('foö', [
 			'transforms' => ['invalid rule'],
@@ -284,20 +276,17 @@ class SlugGeneratorTest extends TestCase
 	}
 
 	/**
+	 * @param array<string> $parameters
 	 * @dataProvider getPrivateApplyTransformRule
-	 *
-	 * @param array  $parameters
-	 * @param string $expected
-	 * @param bool   $skip
 	 */
-	public function testPrivateApplyTransformRule(array $parameters, string $expected, bool $skip = false)
+	public function testPrivateApplyTransformRule(array $parameters, string $expected, bool $skip = false): void
 	{
 		if ($skip) {
 			$this->markTestSkipped();
 		}
 
 		$generator = new SlugGenerator;
-		$reflection = new \ReflectionClass(get_class($generator));
+		$reflection = new \ReflectionClass(\get_class($generator));
 		$method = $reflection->getMethod('applyTransformRule');
 		$method->setAccessible(true);
 
@@ -305,7 +294,7 @@ class SlugGeneratorTest extends TestCase
 	}
 
 	/**
-	 * @return array
+	 * @return array<array>
 	 */
 	public function getPrivateApplyTransformRule(): array
 	{
@@ -349,5 +338,19 @@ class SlugGeneratorTest extends TestCase
 				'oess',
 			],
 		];
+	}
+
+	/**
+	 * @psalm-suppress UndefinedMethod
+	 */
+	private function expectExceptionMatches(string $regularExpression): void
+	{
+		if (method_exists($this, 'expectExceptionMessageMatches')) {
+			$this->expectExceptionMessageMatches($regularExpression);
+		} else {
+			// PHPUnit 7 compat
+			/** @phpstan-ignore-next-line */
+			$this->expectExceptionMessageRegExp($regularExpression);
+		}
 	}
 }

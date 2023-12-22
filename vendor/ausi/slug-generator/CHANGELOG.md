@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 
+## [1.1.1] (2020-10-19)
+
+ * Support PHP 8.0. [#23]
+ * Fix type issues found by PHPStan.
+ * Update fallback transform rule sets from CLDR.
+
 ## [1.1.0] (2018-12-11)
 
  * Add slug generator interface. [#11]
@@ -35,7 +41,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
  * Initial release
 
-[Unreleased]: https://github.com/ausi/slug-generator/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/ausi/slug-generator/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/ausi/slug-generator/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/ausi/slug-generator/compare/v1.0.3...v1.1.0
 [1.0.3]: https://github.com/ausi/slug-generator/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/ausi/slug-generator/compare/v1.0.1...v1.0.2
@@ -44,6 +51,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 [1.0.0-alpha2]: https://github.com/ausi/slug-generator/compare/v1.0.0-alpha1...v1.0.0-alpha2
 [1.0.0-alpha1]: https://github.com/ausi/slug-generator/commits/v1.0.0-alpha1
 
+[#23]: https://github.com/ausi/slug-generator/issues/23
 [#13]: https://github.com/ausi/slug-generator/issues/13
 [#11]: https://github.com/ausi/slug-generator/issues/11
 [#9]: https://github.com/ausi/slug-generator/issues/9

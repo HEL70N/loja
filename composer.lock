@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "ausi/slug-generator",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ausi/slug-generator.git",
-                "reference": "59b641dfa764658e1fbf37f75312e702817cd319"
+                "reference": "4e761b08966c5d4aeecc1829ac997e5a5a29d231"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ausi/slug-generator/zipball/59b641dfa764658e1fbf37f75312e702817cd319",
-                "reference": "59b641dfa764658e1fbf37f75312e702817cd319",
+                "url": "https://api.github.com/repos/ausi/slug-generator/zipball/4e761b08966c5d4aeecc1829ac997e5a5a29d231",
+                "reference": "4e761b08966c5d4aeecc1829ac997e5a5a29d231",
                 "shasum": ""
             },
             "require": {
@@ -25,12 +25,16 @@
                 "ext-mbstring": "*",
                 "ext-pcre": "*",
                 "lib-icu": ">=4.2.1",
-                "php": "^7.1"
+                "php": "^7.1 || ^8.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.4",
-                "php-coveralls/php-coveralls": "^2.0",
-                "phpunit/phpunit": "^7.0"
+                "contao/easy-coding-standard": "^3.0",
+                "phpstan/phpstan": "^0.12.40",
+                "phpstan/phpstan-phpunit": "^0.12.16",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.4 || ^9.4.2",
+                "psalm/plugin-phpunit": "^0.9",
+                "slam/phpstan-extensions": "^5.0",
+                "vimeo/psalm": "^3.9"
             },
             "type": "library",
             "autoload": {
@@ -59,7 +63,17 @@
                 "transliteration",
                 "unicode"
             ],
-            "time": "2018-12-11T20:59:21+00:00"
+            "support": {
+                "issues": "https://github.com/ausi/slug-generator/issues",
+                "source": "https://github.com/ausi/slug-generator/tree/v1.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ausi",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-10-19T15:25:33+00:00"
         }
     ],
     "packages-dev": [],
@@ -69,5 +83,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
 }

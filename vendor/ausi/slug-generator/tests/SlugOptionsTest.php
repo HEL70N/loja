@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the ausi/slug-generator package.
  *
@@ -8,8 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-declare(strict_types=1);
 
 namespace Ausi\SlugGenerator\Tests;
 
@@ -21,14 +21,14 @@ use PHPUnit\Framework\TestCase;
  */
 class SlugOptionsTest extends TestCase
 {
-	public function testInstantiation()
+	public function testInstantiation(): void
 	{
 		$this->assertInstanceOf(SlugOptions::class, new SlugOptions);
 		$this->assertInstanceOf(SlugOptions::class, new SlugOptions([]));
 		$this->assertInstanceOf(SlugOptions::class, (new SlugOptions)->merge([]));
 	}
 
-	public function testMerge()
+	public function testMerge(): void
 	{
 		$options = (new SlugOptions)->merge(new SlugOptions(['delimiter' => 'x']));
 
@@ -42,7 +42,7 @@ class SlugOptionsTest extends TestCase
 		$this->assertSame('x', $options2->getValidChars());
 	}
 
-	public function testGetIterator()
+	public function testGetIterator(): void
 	{
 		$options = new SlugOptions;
 		$this->assertSame([], iterator_to_array($options));
@@ -57,7 +57,7 @@ class SlugOptionsTest extends TestCase
 		$this->assertSame(['delimiter' => '-', 'validChars' => 'x'], iterator_to_array($options));
 	}
 
-	public function testSetDelimiter()
+	public function testSetDelimiter(): void
 	{
 		$options = new SlugOptions;
 		$this->assertSame('-', $options->getDelimiter());
@@ -69,7 +69,7 @@ class SlugOptionsTest extends TestCase
 		$this->assertSame('xx', $options->setDelimiter('xx')->getDelimiter());
 	}
 
-	public function testSetValidChars()
+	public function testSetValidChars(): void
 	{
 		$options = new SlugOptions;
 		$this->assertSame('a-z0-9', $options->getValidChars());
@@ -87,20 +87,18 @@ class SlugOptionsTest extends TestCase
 
 	/**
 	 * @dataProvider getInvalidCharacterClasses
-	 *
-	 * @param mixed $valid
 	 */
-	public function testSetValidCharsThrows($valid)
+	public function testSetValidCharsThrows(string $valid): void
 	{
 		$options = new SlugOptions;
 
 		$this->expectException(\InvalidArgumentException::class);
-		$this->expectExceptionMessageRegExp('("'.preg_quote($valid).'")');
+		$this->expectExceptionMatches('("'.preg_quote($valid).'")');
 
 		$options->setValidChars($valid);
 	}
 
-	public function testSetIgnoreChars()
+	public function testSetIgnoreChars(): void
 	{
 		$options = new SlugOptions;
 		$this->assertSame('\p{Mn}\p{Lm}', $options->getIgnoreChars());
@@ -118,23 +116,21 @@ class SlugOptionsTest extends TestCase
 
 	/**
 	 * @dataProvider getInvalidCharacterClasses
-	 *
-	 * @param mixed $ignore
 	 */
-	public function testSetIgnoreCharsThrows($ignore)
+	public function testSetIgnoreCharsThrows(string $ignore): void
 	{
 		$options = new SlugOptions;
 
 		$this->expectException(\InvalidArgumentException::class);
-		$this->expectExceptionMessageRegExp('("'.preg_quote($ignore).'")');
+		$this->expectExceptionMatches('("'.preg_quote($ignore).'")');
 
 		$options->setIgnoreChars($ignore);
 	}
 
 	/**
-	 * @return array
+	 * @return array<array<string>>
 	 */
-	public function getInvalidCharacterClasses()
+	public function getInvalidCharacterClasses(): array
 	{
 		return [
 			['^a'],
@@ -145,7 +141,7 @@ class SlugOptionsTest extends TestCase
 		];
 	}
 
-	public function testSetLocale()
+	public function testSetLocale(): void
 	{
 		$options = new SlugOptions;
 		$this->assertSame('', $options->getLocale());
@@ -161,21 +157,19 @@ class SlugOptionsTest extends TestCase
 
 	/**
 	 * @dataProvider getSetLocaleThrows
-	 *
-	 * @param mixed $locale
 	 */
-	public function testSetLocaleThrows($locale)
+	public function testSetLocaleThrows(string $locale): void
 	{
 		$options = new SlugOptions;
 
 		$this->expectException(\InvalidArgumentException::class);
-		$this->expectExceptionMessageRegExp('("'.preg_quote($locale).'")');
+		$this->expectExceptionMatches('("'.preg_quote($locale).'")');
 
 		$options->setLocale($locale);
 	}
 
 	/**
-	 * @return array
+	 * @return array<array<string>>
 	 */
 	public function getSetLocaleThrows()
 	{
@@ -186,7 +180,7 @@ class SlugOptionsTest extends TestCase
 		];
 	}
 
-	public function testSetTransforms()
+	public function testSetTransforms(): void
 	{
 		$options = new SlugOptions;
 		$this->assertSame(['Upper', 'Lower', 'Latn', 'ASCII', 'Upper', 'Lower'], $options->getTransforms());
@@ -208,9 +202,9 @@ class SlugOptionsTest extends TestCase
 	/**
 	 * @dataProvider getAddTransformThrows
 	 *
-	 * @param mixed $transform
+	 * @phpstan-param mixed $transform
 	 */
-	public function testSetTransformsThrows($transform)
+	public function testSetTransformsThrows($transform): void
 	{
 		$options = new SlugOptions;
 
@@ -219,7 +213,7 @@ class SlugOptionsTest extends TestCase
 		$options->setTransforms([$transform]);
 	}
 
-	public function testSetPreTransforms()
+	public function testSetPreTransforms(): void
 	{
 		$options = new SlugOptions(['transforms' => [], 'preTransforms' => ['Upper']]);
 		$this->assertSame(['Upper'], $options->getTransforms());
@@ -236,9 +230,9 @@ class SlugOptionsTest extends TestCase
 	/**
 	 * @dataProvider getAddTransformThrows
 	 *
-	 * @param mixed $transform
+	 * @phpstan-param mixed $transform
 	 */
-	public function testSetPreTransformsThrows($transform)
+	public function testSetPreTransformsThrows($transform): void
 	{
 		$options = new SlugOptions;
 
@@ -247,7 +241,7 @@ class SlugOptionsTest extends TestCase
 		$options->setPreTransforms([$transform]);
 	}
 
-	public function testSetPostTransforms()
+	public function testSetPostTransforms(): void
 	{
 		$options = new SlugOptions(['transforms' => [], 'postTransforms' => ['Upper']]);
 		$this->assertSame(['Upper'], $options->getTransforms());
@@ -264,9 +258,9 @@ class SlugOptionsTest extends TestCase
 	/**
 	 * @dataProvider getAddTransformThrows
 	 *
-	 * @param mixed $transform
+	 * @phpstan-param mixed $transform
 	 */
-	public function testSetPostTransformsThrows($transform)
+	public function testSetPostTransformsThrows($transform): void
 	{
 		$options = new SlugOptions;
 
@@ -278,10 +272,11 @@ class SlugOptionsTest extends TestCase
 	/**
 	 * @dataProvider getAddTransformThrows
 	 *
-	 * @param mixed       $transform
-	 * @param string|null $expectedException
+	 * @phpstan-param mixed $transform
+	 *
+	 * @param class-string<\Throwable> $expectedException
 	 */
-	public function testAddTransformThrows($transform, $expectedException)
+	public function testAddTransformThrows($transform, string $expectedException): void
 	{
 		$options = new SlugOptions(['transforms' => []]);
 
@@ -289,11 +284,11 @@ class SlugOptionsTest extends TestCase
 			$this->expectException($expectedException);
 		}
 
-		$this->assertEquals([$transform], $options->addTransform($transform)->getTransforms());
+		$this->assertSame([$transform], $options->addTransform($transform)->getTransforms());
 	}
 
 	/**
-	 * @return array
+	 * @return array<array>
 	 */
 	public function getAddTransformThrows()
 	{
@@ -305,11 +300,25 @@ class SlugOptionsTest extends TestCase
 		];
 	}
 
-	public function testUnknownOptionThrows()
+	public function testUnknownOptionThrows(): void
 	{
 		$this->expectException(\InvalidArgumentException::class);
-		$this->expectExceptionMessageRegExp('(unknown.*"foo")i');
+		$this->expectExceptionMatches('(unknown.*"foo")i');
 
 		new SlugOptions(['foo' => 'bar']);
+	}
+
+	/**
+	 * @psalm-suppress UndefinedMethod
+	 */
+	private function expectExceptionMatches(string $regularExpression): void
+	{
+		if (method_exists($this, 'expectExceptionMessageMatches')) {
+			$this->expectExceptionMessageMatches($regularExpression);
+		} else {
+			// PHPUnit 7 compat
+			/** @phpstan-ignore-next-line */
+			$this->expectExceptionMessageRegExp($regularExpression);
+		}
 	}
 }

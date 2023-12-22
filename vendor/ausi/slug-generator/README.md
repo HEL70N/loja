@@ -1,12 +1,10 @@
 Slug Generator Library
 ======================
 
-[![Build Status](https://img.shields.io/travis/ausi/slug-generator/master.svg?style=flat-square)](https://travis-ci.org/ausi/slug-generator/branches)
-[![Code Quality](https://img.shields.io/scrutinizer/g/ausi/slug-generator/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/ausi/slug-generator/)
-[![Coverage](https://img.shields.io/coveralls/ausi/slug-generator/master.svg?style=flat-square)](https://coveralls.io/github/ausi/slug-generator)
+[![Build Status](https://img.shields.io/github/workflow/status/ausi/slug-generator/CI/master.svg?style=flat-square)](https://github.com/ausi/slug-generator/actions?query=branch%3Amaster)
+[![Coverage](https://img.shields.io/codecov/c/github/ausi/slug-generator/master.svg?style=flat-square)](https://codecov.io/gh/ausi/slug-generator)
 [![Packagist Version](https://img.shields.io/packagist/v/ausi/slug-generator.svg?style=flat-square)](https://packagist.org/packages/ausi/slug-generator)
 [![Downloads](https://img.shields.io/packagist/dt/ausi/slug-generator.svg?style=flat-square)](https://packagist.org/packages/ausi/slug-generator)
-[![Patreon](https://img.shields.io/badge/Donate%20on-Patreon-lightgrey.svg?style=flat-square&colorB=F96854)](https://www.patreon.com/ausi)
 [![MIT License](https://img.shields.io/github/license/ausi/slug-generator.svg?style=flat-square)](https://github.com/ausi/slug-generator/blob/master/LICENSE)
 
 This library provides methods to generate slugs
@@ -19,6 +17,9 @@ Usage
 -----
 
 ```php
+<?php
+use Ausi\SlugGenerator\SlugGenerator;
+
 $generator = new SlugGenerator;
 
 $generator->generate('Hello Wörld!');  // Output: hello-world
@@ -54,8 +55,15 @@ Options are often very limited which makes it hard to customize for different us
 Some libs carry large rulesets with them that try to convert characters to ASCII,
 no one uses Unicode’s [CLDR][]
 which is the standard for transliteration rules and many other transforms.
+
 But most importantly no library was able to do the “correct” conversions,
-like “Ö-Äpfel” to “OE-Aepfel” for German or “İNATÇI” to “inatçı” for Turkish.
+like `Ö-Äpfel` to `OE-Aepfel` for German or `İNATÇI` to `inatçı` for Turkish.
+Because the CLDR transliteration rules are context sensitive
+they know how to correctly convert to `OE-Aepfel`
+instead of `Oe-Aepfel` or `OE-AEpfel`.
+CLDR also takes the language into account
+and knows that the turkish uppercase letter `I`
+has the lowercase form `ı` instead of `i`.
 
 Options
 -------
@@ -109,20 +117,31 @@ $generator->generate('Hello Wörld!', ['locale' => 'en_US']); // Result: hello-w
 
 ### `transforms`, default `Upper, Lower, Latn, ASCII, Upper, Lower`
 
-Transform rules or rule sets that are used by the `Transliterator`
+Internally the slug generator uses [Transform Rules][]
 to convert invalid characters to valid ones.
-[Rules][] are for example `Lower` or `ASCII`,
-[rule sets][] look like `a > b; c > d;`.
+These rules can be customized
+by setting the `transforms`, `preTransforms` or `postTransforms` options.
+Usually setting `preTransforms` is desired
+as it applies the custom transforms
+prior to the default ones.
+
+How [Transform Rules][] (like `Lower` or `ASCII`)
+and [rule sets][] (like `a > b; c > d;`) work
+is documented on the ICU website:
+<http://userguide.icu-project.org/transforms>
 
 ```php
 $generator->generate('Damn 💩!!');                                           // Result: damn
-$generator->generate('Damn 💩!!', ['transforms' => ['💩 > Ice-Cream']]);     // Result: amn-ce-ream
-$generator->generate('Damn 💩!!', ['postTransforms' => ['💩 > Ice-Cream']]); // Result: damn-ce-ream
 $generator->generate('Damn 💩!!', ['preTransforms' => ['💩 > Ice-Cream']]);  // Result: damn-ice-cream
+
+$generator->generate('©');                                          // Result: c
+$generator->generate('©', ['preTransforms' => ['© > Copyright']]);  // Result: copyright
+$generator->generate('©', ['preTransforms' => ['Hex']]);            // Result: u00a9
+$generator->generate('©', ['preTransforms' => ['Name']]);           // Result: n-copyright-sign
 ```
 
 [CLDR]: http://cldr.unicode.org/ "Unicode Common Locale Data Repository"
 [Composer]: https://getcomposer.org/
 [range syntax]: http://www.regular-expressions.info/charclass.html
-[Rules]: http://userguide.icu-project.org/transforms/general
+[Transform Rules]: http://userguide.icu-project.org/transforms/general
 [rule sets]: http://userguide.icu-project.org/transforms/general/rules

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the ausi/slug-generator package.
  *
@@ -9,14 +11,14 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Ausi\SlugGenerator;
 
 /**
  * Slug generator options.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
+ *
+ * @implements \IteratorAggregate<string,mixed>
  */
 class SlugOptions implements \IteratorAggregate
 {
@@ -41,7 +43,7 @@ class SlugOptions implements \IteratorAggregate
 	private $locale = '';
 
 	/**
-	 * @var string[]
+	 * @var array<string>
 	 */
 	private $transforms = [
 		'Upper',
@@ -54,12 +56,12 @@ class SlugOptions implements \IteratorAggregate
 	];
 
 	/**
-	 * @var array
+	 * @var array<string,null>
 	 */
 	private $setOptions = [];
 
 	/**
-	 * @param iterable $options See the setter methods for available options
+	 * @param iterable<string,mixed> $options See the setter methods for available options
 	 */
 	public function __construct(iterable $options = [])
 	{
@@ -73,12 +75,14 @@ class SlugOptions implements \IteratorAggregate
 	 * Get an iterator for all options that have been explicitly set.
 	 *
 	 * {@inheritdoc}
+	 *
+	 * @return \Traversable<string,mixed>
 	 */
 	public function getIterator(): \Traversable
 	{
 		$options = [];
 
-		foreach ($this->setOptions as $option => $value) {
+		foreach (array_keys($this->setOptions) as $option) {
 			$options[$option] = $this->{'get'.ucfirst($option)}();
 		}
 
@@ -88,7 +92,7 @@ class SlugOptions implements \IteratorAggregate
 	/**
 	 * Merge the options with and return a new options object.
 	 *
-	 * @param iterable $options SlugOptions object or options array
+	 * @param iterable<string,mixed> $options SlugOptions object or options array
 	 *
 	 * @return static
 	 */
@@ -117,9 +121,6 @@ class SlugOptions implements \IteratorAggregate
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getDelimiter(): string
 	{
 		return $this->delimiter;
@@ -142,9 +143,6 @@ class SlugOptions implements \IteratorAggregate
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getValidChars(): string
 	{
 		return $this->validChars;
@@ -167,9 +165,6 @@ class SlugOptions implements \IteratorAggregate
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getIgnoreChars(): string
 	{
 		return $this->ignoreChars;
@@ -197,9 +192,6 @@ class SlugOptions implements \IteratorAggregate
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getLocale(): string
 	{
 		return $this->locale;
@@ -228,8 +220,8 @@ class SlugOptions implements \IteratorAggregate
 	}
 
 	/**
-	 * @param iterable $transforms List of rules or rulesets to be used by the Transliterator,
-	 *                             like `Lower`, `ASCII` or `a > b; c > d`
+	 * @param iterable<string> $transforms List of rules or rulesets to be used by the Transliterator,
+	 *                                     like `Lower`, `ASCII` or `a > b; c > d`
 	 *
 	 * @return static
 	 */
@@ -248,7 +240,7 @@ class SlugOptions implements \IteratorAggregate
 	}
 
 	/**
-	 * @return string[]
+	 * @return array<string>
 	 */
 	public function getTransforms(): array
 	{
@@ -258,14 +250,14 @@ class SlugOptions implements \IteratorAggregate
 	/**
 	 * Add transforms before existing ones.
 	 *
-	 * @param iterable $transforms List of rules or rulesets to be used by the Transliterator,
-	 *                             like `Lower`, `ASCII` or `a > b; c > d`
+	 * @param iterable<string> $transforms List of rules or rulesets to be used by the Transliterator,
+	 *                                     like `Lower`, `ASCII` or `a > b; c > d`
 	 *
 	 * @return static
 	 */
 	public function setPreTransforms(iterable $transforms): self
 	{
-		if (!is_array($transforms)) {
+		if (!\is_array($transforms)) {
 			$transforms = iterator_to_array($transforms, false);
 		}
 
@@ -280,8 +272,8 @@ class SlugOptions implements \IteratorAggregate
 	/**
 	 * Add transforms after existing ones.
 	 *
-	 * @param iterable $transforms List of rules or rulesets to be used by the Transliterator,
-	 *                             like `Lower`, `ASCII` or `a > b; c > d`
+	 * @param iterable<string> $transforms List of rules or rulesets to be used by the Transliterator,
+	 *                                     like `Lower`, `ASCII` or `a > b; c > d`
 	 *
 	 * @return static
 	 */
@@ -296,8 +288,6 @@ class SlugOptions implements \IteratorAggregate
 	}
 
 	/**
-	 * @param string $option
-	 *
 	 * @throws \InvalidArgumentException If it’s an invalid option name
 	 */
 	private function assertOptionName(string $option): void
@@ -312,14 +302,12 @@ class SlugOptions implements \IteratorAggregate
 			'postTransforms',
 		];
 
-		if (!in_array($option, $validOptions, true)) {
+		if (!\in_array($option, $validOptions, true)) {
 			throw new \InvalidArgumentException(sprintf('Unknown option "%s"', $option));
 		}
 	}
 
 	/**
-	 * @param string $chars
-	 *
 	 * @throws \InvalidArgumentException If it’s an invalid regex character class
 	 */
 	private function assertCharacterClass(string $chars): void
@@ -332,14 +320,14 @@ class SlugOptions implements \IteratorAggregate
 	}
 
 	/**
-	 * @param mixed $transform
+	 * @phpstan-param mixed $transform
 	 *
 	 * @throws \InvalidArgumentException If it’s an invalid transform
 	 */
 	private function assertTransform($transform): void
 	{
-		if (!is_string($transform)) {
-			throw new \InvalidArgumentException(sprintf('Transform must be of the type string, %s given', gettype($transform)));
+		if (!\is_string($transform)) {
+			throw new \InvalidArgumentException(sprintf('Transform must be of the type string, %s given', \gettype($transform)));
 		}
 
 		if ($transform === '') {
