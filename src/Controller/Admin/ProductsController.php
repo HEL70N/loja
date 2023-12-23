@@ -53,7 +53,28 @@ class ProductsController
     public function edit($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            var_dump($_POST); die;
+            $data = $_POST;
+            
+            $data = Sanitizer::sanitizeData($data, Product::$filters);
+            
+			if(!Validator::validateRequiredFields($data)) {
+                Flash::add('warning', 'Preencha todos os campos!');
+				return header('Location: ' . HOME . '/admin/products/new');
+			}
+            
+            $data['id'] = (int) $id;
+            $data['price'] = str_replace('.', '', $data['price']);
+            $data['price'] = str_replace(',', '.', $data['price']);
+
+            $product = new Product(Connection::getInstance());
+
+            if(!$product->update($data)) {
+				Flash::add('error', 'Erro actualizar produto!');
+				return header('Location: ' . HOME . '/admin/products/edit' . $id);
+			}
+
+			Flash::add('success', 'Produto actualizado com sucesso!');
+			return header('Location: ' . HOME . '/admin/products/edit' . $id);
         }
 
         $view = (new View('admin/products/edit.phtml'));

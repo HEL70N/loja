@@ -18,6 +18,7 @@
 				<th>#</th>
 				<th>Nome</th>
                 <th>Preço</th>
+                <th>Status</th>
 				<th>Criado em</th>
 				<th></th>
 			</tr>
@@ -27,6 +28,13 @@
 			<tr>
 				<td><?=$p['id'];?></td>
 				<td><?=$p['name'];?></td>
+				<td>
+					<?php if ($p['is_active']): ?>
+						<span class="label label-success">Activo</span>
+					<?php else : ?>
+						<span class="label label-danger">Inactivo</span>	
+					<?php endif; ?>
+				</td>
                 <td><?=number_format($p['price'], 2, ',', '.');?></td>
 				<td><?=date('d/m/Y H:i:s', strtotime($p['created_at']));?></td>
 				<td>
