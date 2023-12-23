@@ -75,8 +75,8 @@ class CategoriesController
 
 				$data['id'] = (int) $id;
 
-				if ( ! Validator::validateRequiredFields( $data ) ) {
-					Flash::add( 'warning', 'Preencha todos os campos!' );
+				if (!Validator::validateRequiredFields($data)) {
+					Flash::add('warning', 'Preencha todos os campos!');
 
 					return header( 'Location: ' . HOME . '/categories/edit/' . $id );
 				}
