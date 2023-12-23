@@ -82,4 +82,27 @@ class ProductsController
 
         return $view->render();
     }
+
+    public function remove($id = null)
+	{
+		try{
+			$product = new Product(Connection::getInstance());
+
+			if(!$product->delete($id)) {
+				Flash::add('error', 'Erro ao realizar remoção do produto!');
+				return header('Location: ' . HOME . '/admin/products');
+			}
+
+			Flash::add('success', 'Produto removido com sucesso!');
+			return header('Location: ' . HOME . '/admin/products');
+
+		} catch (\Exception $e) {
+			if(APP_DEBUG) {
+				Flash::add('error', $e->getMessage());
+				return header('Location: ' . HOME . '/admin/products');
+			}
+			Flash::add('error', 'Ocorreu um problema interno, por favor contacte o admin.');
+			return header('Location: ' . HOME . '/admin/products');
+		}
+	}
 }
