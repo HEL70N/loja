@@ -49,4 +49,16 @@ class ProductsController
 
         return (new View('admin/products/new.phtml'))->render();
     }
+
+    public function edit($id = null)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            var_dump($_POST); die;
+        }
+
+        $view = (new View('admin/products/edit.phtml'));
+        $view->product = (new Product(Connection::getInstance()))->find($id);
+
+        return $view->render();
+    }
 }
