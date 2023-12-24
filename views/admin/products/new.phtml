@@ -1,49 +1,50 @@
 <?php require VIEWS_PATH . '/admin/includes/header.phtml'; ?>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Criar Produto</h2>
-                <hr>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Criar Produto</h2>
+            <hr>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <?php require VIEWS_PATH . 'includes/messages.phtml';?>
-            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php require VIEWS_PATH . 'includes/messages.phtml'; ?>
         </div>
-        
-        <div class="row">
-            <form action="<?=HOME; ?>/admin/products/new" method="post">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Nome do Produto</label>
-                        <input type="text" class="form-control" name="name">
-                    </div>
-                </div>
+    </div>
 
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Descrição</label>
-                        <input type="text" class="form-control" name="description">
-                    </div>
+    <div class="row">
+        <form action="<?= HOME; ?>/admin/products/new" method="post" enctype="multipart/form-data">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Nome do Produto</label>
+                    <input type="text" class="form-control" name="name">
                 </div>
+            </div>
 
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Conteúdo</label>
-                        <textarea name="content" class="form-control"></textarea>
-                    </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" class="form-control" name="description">
                 </div>
+            </div>
 
-                <div class="col-md-12">
-                    <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Conteúdo</label>
+                    <textarea name="content" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Preço</label>
                             <input type="text" class="form-control" name="price">
                         </div>
                     </div>
+
                     <div class="col-md-6">
                         <label>Status do Producto</label>
                         <select name="is_active" id="" class="form-control">
@@ -51,12 +52,20 @@
                             <option value="0">Inactivo</option>
                         </select>
                     </div>
-                    </div>
                 </div>
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-lg btn-success">Criar Produto</button>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Seleccione as imagens do produto</label>
+                    <input type="file" name="images[]" multiple class="form-control">
                 </div>
-            </form>
-        </div> <!-- Fechamento do row dos inputs -->
-    </div>
-<?php require VIEWS_PATH . '/admin/includes/footer.phtml';?>
+            </div>
+
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-lg btn-success">Criar Produto</button>
+            </div>
+        </form>
+    </div> <!-- Fechamento do row dos inputs -->
+</div>
+<?php require VIEWS_PATH . '/admin/includes/footer.phtml'; ?>
