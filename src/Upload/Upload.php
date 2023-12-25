@@ -8,6 +8,10 @@ class Upload
 
     public function setFolder($folder)
     {
+        if (!is_dir($folder)) {
+            mkdir($folder, 077, true);
+        }
+
         $this->folder = $folder;
     }
 
@@ -15,7 +19,9 @@ class Upload
     {
         $arrImagesName = [];
         for ($i = 0; $i < count($files['name']); $i++) {
-            $newImageName = $this->renameImage($files['name'][$i]);
+            $extension = strrchr($files['name'][$i], '.');
+
+            $newImageName = $this->renameImage($files['name'][$i]). $extension;
 
             if (move_uploaded_file($files['tmp_name'][$i], $this->folder . $newImageName)) {
                 $arrImagesName[] = $newImageName;

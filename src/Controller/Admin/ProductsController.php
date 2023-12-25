@@ -8,6 +8,7 @@ use Code\Session\Flash;
 use Code\Entity\Product;
 use Code\Security\Validator\Sanitizer;
 use Code\Security\Validator\Validator;
+use Code\Upload\Upload;
 use Code\View\View;
 
 class ProductsController
@@ -25,9 +26,7 @@ class ProductsController
 
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$data = $_POST;
-
-			var_dump($_FILES['images']);
-			die;
+			$images = $_FILES['images'];
 
 			$data = Sanitizer::sanitizeData($data, Product::$filters);
 
@@ -47,6 +46,12 @@ class ProductsController
 				return header('Location: ' . HOME . '/admin/products/new');
 			}
 
+			if (isset($images['name']) && $images['name']) {
+				$upload = new Upload();
+				$upload->setFolder(UPLOAD_PATH. '/products/');
+				$upload->doUpload($images);
+			}
+
 			Flash::add('success', 'Produto criado com sucesso!');
 			return header('Location: ' . HOME . '/admin/products');
 		}
@@ -58,7 +63,7 @@ class ProductsController
 	{
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$data = $_POST;
-			
+
 			$data = Sanitizer::sanitizeData($data, Product::$filters);
 
 			if (!Validator::validateRequiredFields($data)) {
