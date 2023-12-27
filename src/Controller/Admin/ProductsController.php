@@ -49,6 +49,12 @@ class ProductsController
 			}
 
 			if (isset($images['name']) && $images['name']) {
+
+				if(Validator::validateImagesFile($images)) {
+					Flash::add('error', 'Imagens enviadas não são válidas!');
+					return header('Location: ' . HOME . '/admin/products/new');
+				}
+
 				$upload = new Upload();
 				$upload->setFolder(UPLOAD_PATH . '/products/');
 				$images = $upload->doUpload($images);
