@@ -123,7 +123,8 @@ class ProductsController
 			Flash::add('success', 'Produto actualizado com sucesso!');
 			return header('Location: ' . HOME . '/admin/products/edit' . $id);
 		}
-
+		var_dump((new Product(Connection::getInstance()))->getProductWithImagesById($id));
+		die;
 		$view = (new View('admin/products/edit.phtml'));
 		$view->product = (new Product(Connection::getInstance()))->find($id);
 
