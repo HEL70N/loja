@@ -6,6 +6,7 @@ use Ausi\SlugGenerator\SlugGenerator;
 use Code\DB\Connection;
 use Code\Session\Flash;
 use Code\Entity\Product;
+use Code\Entity\ProductImage;
 use Code\Security\Validator\Sanitizer;
 use Code\Security\Validator\Validator;
 use Code\Upload\Upload;
@@ -40,16 +41,26 @@ class ProductsController
 			$data['price'] = str_replace(',', '.', $data['price']);
 
 			$product = new Product(Connection::getInstance());
+			$productId = $product->insert($data);
 
-			if (!$product->insert($data)) {
+			if (!$productId) {
 				Flash::add('error', 'Erro ao criar produto!');
 				return header('Location: ' . HOME . '/admin/products/new');
 			}
 
 			if (isset($images['name']) && $images['name']) {
 				$upload = new Upload();
-				$upload->setFolder(UPLOAD_PATH. '/products/');
-				$upload->doUpload($images);
+				$upload->setFolder(UPLOAD_PATH . '/products/');
+				$images = $upload->doUpload($images);
+
+				foreach ($images as $image) {
+					$imagesData = [];
+					$imagesData['product_id'] = $productId;
+					$imagesData['image'] = $images;
+
+					$productImages = new ProductImage(Connection::getInstance());
+					$productImages->insert($imagesData);
+				}
 			}
 
 			Flash::add('success', 'Produto criado com sucesso!');

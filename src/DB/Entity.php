@@ -1,4 +1,5 @@
 <?php
+
 namespace Code\DB;
 
 use \PDO;
@@ -31,15 +32,15 @@ abstract class Entity
 		return current($this->where(['id' => $id], '', $fields));
 	}
 
-	public function where(array $conditions, $operator = ' AND ', $fields = '*') : array
+	public function where(array $conditions, $operator = ' AND ', $fields = '*'): array
 	{
 		$sql = 'SELECT ' . $fields . ' FROM ' . $this->table . ' WHERE ';
 
 		$binds = array_keys($conditions);
 
 		$where  = null;
-		foreach($binds as $v) {
-			if(is_null($where)) {
+		foreach ($binds as $v) {
+			if (is_null($where)) {
 				$where .= $v . ' = :' . $v;
 			} else {
 				$where .= $operator . $v . ' = :' . $v;
@@ -51,28 +52,30 @@ abstract class Entity
 		$get = $this->bind($sql, $conditions);
 		$get->execute();
 
-		if(!$get->rowCount()) {
+		if (!$get->rowCount()) {
 			throw new \Exception("Nada encontrado para esta consulta!");
 		}
 
 		return $get->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
-	public function insert($data): bool
+	public function insert($data): int
 	{
 		$binds = array_keys($data);
 
-		$sql = 'INSERT INTO ' . $this->table . '('. implode(', ', $binds) . ', created_at, updated_at
-				) VALUES(:' . implode(', :', $binds) .', NOW(), NOW())';
+		$sql = 'INSERT INTO ' . $this->table . '(' . implode(', ', $binds) . ', created_at, updated_at
+				) VALUES(:' . implode(', :', $binds) . ', NOW(), NOW())';
 
 		$insert = $this->bind($sql, $data);
 
-		return $insert->execute();
+		$insert->execute();
+
+		return $this->conn->lastInsertId();
 	}
 
 	public function update($data): bool
 	{
-		if(!array_key_exists('id', $data)) {
+		if (!array_key_exists('id', $data)) {
 			throw new \Exception('É preciso informar um ID válido para update!');
 		}
 
@@ -81,9 +84,9 @@ abstract class Entity
 		$set = null;
 		$binds = array_keys($data);
 
-		foreach($binds as $v) {
-			if($v !== 'id') {
-				$set .= is_null($set) ? $v . ' = :' . $v : ', ' .  $v . ' = :' . $v ;
+		foreach ($binds as $v) {
+			if ($v !== 'id') {
+				$set .= is_null($set) ? $v . ' = :' . $v : ', ' .  $v . ' = :' . $v;
 			}
 		}
 		$sql .= $set . ', updated_at = NOW() WHERE id = :id';
