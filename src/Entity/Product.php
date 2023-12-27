@@ -29,6 +29,17 @@ class Product extends Entity
         $select->bindValue(':productId', $product_id, \PDO::PARAM_INT);
         $select->execute();
 
-        return $select->fetchAll(\PDO::FETCH_ASSOC);
+        $productData = [];
+        foreach ($select->fetchAll(\PDO::FETCH_ASSOC) as $product) {
+            $productData['id'] = $product['id'];
+            $productData['name'] = $product['name'];
+            $productData['description'] = $product['description'];
+            $productData['content'] = $product['content'];
+            $productData['price'] = $product['price'];
+            $productData['is_active'] = $product['is_active'];
+            $productData['images'][] = ['id' => $product['image_id'], 'image' => $product['image']];
+        }
+
+        return $productData;
     }
 }
