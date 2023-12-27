@@ -62,7 +62,7 @@ class ProductsController
 				foreach ($images as $image) {
 					$imagesData = [];
 					$imagesData['product_id'] = $productId;
-					$imagesData['image'] = $images;
+					$imagesData['image'] = $image;
 
 					$productImages = new ProductImage(Connection::getInstance());
 					$productImages->insert($imagesData);
@@ -113,7 +113,7 @@ class ProductsController
 				foreach ($images as $image) {
 					$imagesData = [];
 					$imagesData['product_id'] = $id;
-					$imagesData['image'] = $images;
+					$imagesData['image'] = $image;
 
 					$productImages = new ProductImage(Connection::getInstance());
 					$productImages->insert($imagesData);
@@ -123,7 +123,7 @@ class ProductsController
 			Flash::add('success', 'Produto actualizado com sucesso!');
 			return header('Location: ' . HOME . '/admin/products/edit' . $id);
 		}
-		
+
 		$view = (new View('admin/products/edit.phtml'));
 		$view->product = (new Product(Connection::getInstance()))->getProductWithImagesById($id);
 

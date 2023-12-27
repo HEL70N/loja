@@ -67,5 +67,21 @@
             </div>
         </form>
     </div> <!-- Fechamento do row dos inputs -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Imagens do Produto</h2>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <?php foreach ($this->product['images'] as $image) : ?>
+            <div class="col-md-3">
+                <img src="<?= HOME; ?>/uploads/products/<?= $image['image']; ?>" alt="Image do produto <?= $this->product['name']; ?>" class="img-responsive">
+            </div>
+        <?php endforeach; ?>
+    </div>
+
 </div>
 <?php require VIEWS_PATH . '/admin/includes/footer.phtml'; ?>

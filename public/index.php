@@ -8,7 +8,7 @@ $controller = isset($url[0]) && $url[0] ? $url[0] : 'home';
 $action     = isset($url[1]) && $url[1] ? $url[1] : 'index';
 $param      = isset($url[2]) && $url[2] ? $url[2] : null;
 
-if($url[0] == 'admin') {
+if ($url[0] == 'admin') {
 	$controller = isset($url[1]) && $url[1] ? $url[1] : 'home';
 	$action = isset($url[2]) && $url[2] ? $url[2] : 'index';
 	$param = isset($url[3]) && $url[3] ? $url[3] : null;
@@ -20,12 +20,12 @@ if ($url[0] == 'admin') {
 	$controller = "Code\Controller\\" . ucfirst($controller) . 'Controller';
 }
 
-if(!class_exists($controller)) {
+if (!class_exists($controller)) {
 	print (new \Code\View\View('404.phtml'))->render();
 	die;
 }
 
-if(!method_exists($controller, $action)) {
+if (!method_exists($controller, $action)) {
 	$action = 'index';
 	$param  = $url[1];
 }
