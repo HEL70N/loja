@@ -28,7 +28,8 @@ class ProductsController
 	{
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$data = $_POST;
-
+			$categories = $data['categories'];
+			
 			$images = $_FILES['images'];
 
 			$data = Sanitizer::sanitizeData($data, Product::$filters);
@@ -71,9 +72,9 @@ class ProductsController
 				}
 			}
 
-			if (isset($data['categories']) && is_array($data['categories'])) {
-				if (count($data['categories'])) {
-					foreach ($data['categories'] as $category) {
+			// if (isset($data['categories']) && is_array($data['categories'])) {
+				if (count($categories)) {
+					foreach ($categories as $category) {
 						$productCategory = new ProductCategory(Connection::getInstance());
 						$productCategory->insert([
 							'product_id' => $productId,
@@ -81,7 +82,7 @@ class ProductsController
 						]);
 					}
 				}
-			}
+			// }
 
 			Flash::add('success', 'Produto criado com sucesso!');
 			return header('Location: ' . HOME . '/admin/products');
