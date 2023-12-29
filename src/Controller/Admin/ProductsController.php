@@ -7,6 +7,7 @@ use Code\DB\Connection;
 use Code\Entity\Category;
 use Code\Session\Flash;
 use Code\Entity\Product;
+use Code\Entity\ProductCategory;
 use Code\Entity\ProductImage;
 use Code\Security\Validator\Sanitizer;
 use Code\Security\Validator\Validator;
@@ -28,52 +29,59 @@ class ProductsController
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$data = $_POST;
 
-			if (count($data['categories'])) {
-				var_dump($_POST['categories']);
-				die;
+			$images = $_FILES['images'];
+
+			$data = Sanitizer::sanitizeData($data, Product::$filters);
+
+			if (!Validator::validateRequiredFields($data)) {
+				Flash::add('warning', 'Preencha todos os campos!');
+				return header('Location: ' . HOME . '/admin/products/new');
 			}
-			
-			// $images = $_FILES['images'];
 
-			// $data = Sanitizer::sanitizeData($data, Product::$filters);
+			$data['slug'] = (new SlugGenerator())->generate($data['name']);
+			$data['price'] = str_replace('.', '', $data['price']);
+			$data['price'] = str_replace(',', '.', $data['price']);
 
-			// if (!Validator::validateRequiredFields($data)) {
-			// 	Flash::add('warning', 'Preencha todos os campos!');
-			// 	return header('Location: ' . HOME . '/admin/products/new');
-			// }
+			$product = new Product(Connection::getInstance());
+			$productId = $product->insert($data);
 
-			// $data['slug'] = (new SlugGenerator())->generate($data['name']);
-			// $data['price'] = str_replace('.', '', $data['price']);
-			// $data['price'] = str_replace(',', '.', $data['price']);
+			if (!$productId) {
+				Flash::add('error', 'Erro ao criar produto!');
+				return header('Location: ' . HOME . '/admin/products/new');
+			}
 
-			// $product = new Product(Connection::getInstance());
-			// $productId = $product->insert($data);
+			if (isset($images['name']) && $images['name']) {
 
-			// if (!$productId) {
-			// 	Flash::add('error', 'Erro ao criar produto!');
-			// 	return header('Location: ' . HOME . '/admin/products/new');
-			// }
+				if (!Validator::validateImagesFile($images)) {
+					Flash::add('error', 'Imagens enviadas não são válidas!');
+					return header('Location: ' . HOME . '/admin/products/new');
+				}
 
-			// if (isset($images['name']) && $images['name']) {
+				$upload = new Upload();
+				$upload->setFolder(UPLOAD_PATH . '/products/');
+				$images = $upload->doUpload($images);
 
-			// 	if (!Validator::validateImagesFile($images)) {
-			// 		Flash::add('error', 'Imagens enviadas não são válidas!');
-			// 		return header('Location: ' . HOME . '/admin/products/new');
-			// 	}
+				foreach ($images as $image) {
+					$imagesData = [];
+					$imagesData['product_id'] = $productId;
+					$imagesData['image'] = $image;
 
-			// 	$upload = new Upload();
-			// 	$upload->setFolder(UPLOAD_PATH . '/products/');
-			// 	$images = $upload->doUpload($images);
+					$productImages = new ProductImage(Connection::getInstance());
+					$productImages->insert($imagesData);
+				}
+			}
 
-			// 	foreach ($images as $image) {
-			// 		$imagesData = [];
-			// 		$imagesData['product_id'] = $productId;
-			// 		$imagesData['image'] = $image;
-
-			// 		$productImages = new ProductImage(Connection::getInstance());
-			// 		$productImages->insert($imagesData);
-			// 	}
-			// }
+			if (isset($data['categories']) && is_array($data['categories'])) {
+				if (count($data['categories'])) {
+					foreach ($data['categories'] as $category) {
+						$productCategory = new ProductCategory(Connection::getInstance());
+						$productCategory->insert([
+							'product_id' => $productId,
+							'category_id' => $category
+						]);
+					}
+				}
+			}
 
 			Flash::add('success', 'Produto criado com sucesso!');
 			return header('Location: ' . HOME . '/admin/products');
