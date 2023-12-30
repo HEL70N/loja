@@ -29,7 +29,7 @@ class ProductsController
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$data = $_POST;
 			$categories = $data['categories'];
-			
+
 			$images = $_FILES['images'];
 
 			$data = Sanitizer::sanitizeData($data, Product::$filters);
@@ -73,15 +73,15 @@ class ProductsController
 			}
 
 			// if (isset($data['categories']) && is_array($data['categories'])) {
-				if (count($categories)) {
-					foreach ($categories as $category) {
-						$productCategory = new ProductCategory(Connection::getInstance());
-						$productCategory->insert([
-							'product_id' => $productId,
-							'category_id' => $category
-						]);
-					}
+			if (count($categories)) {
+				foreach ($categories as $category) {
+					$productCategory = new ProductCategory(Connection::getInstance());
+					$productCategory->insert([
+						'product_id' => $productId,
+						'category_id' => $category
+					]);
 				}
+			}
 			// }
 
 			Flash::add('success', 'Produto criado com sucesso!');
@@ -144,6 +144,13 @@ class ProductsController
 
 		$view = (new View('admin/products/edit.phtml'));
 		$view->product = (new Product(Connection::getInstance()))->getProductWithImagesById($id);
+
+		$view->productCategories = (new ProductCategory(Connection::getInstance()))->where(['product_id' => $id]);
+		$view->productCategories = array_map(function ($line) {
+			return $line['category_id'];
+		}, $view->productCategories);
+
+		$view->categories = (new Category(Connection::getInstance()))->findAll();
 
 		return $view->render();
 	}
