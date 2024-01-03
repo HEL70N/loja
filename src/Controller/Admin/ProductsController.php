@@ -53,7 +53,7 @@ class ProductsController
 				return header('Location: ' . HOME . '/admin/products/new');
 			}
 
-			if (isset($images['name']) && $images['name']) {
+			if (isset($images['name'][0]) && $images['name'][0]) {
 
 				if (!Validator::validateImagesFile($images)) {
 					Flash::add('error', 'Imagens enviadas não são válidas!');
@@ -113,22 +113,23 @@ class ProductsController
 			$data['id'] = (int) $id;
 			$data['price'] = str_replace('.', '', $data['price']);
 			$data['price'] = str_replace(',', '.', $data['price']);
-
+			$data['is_active'] = $data['is_active'] == 'A' ? 1 : 0;
+			
 			$product = new Product(Connection::getInstance());
 
 			if (!$product->update($data)) {
 				Flash::add('error', 'Erro actualizar produto!');
-				return header('Location: ' . HOME . '/admin/products/edit' . $id);
+				return header('Location: ' . HOME . '/admin/products/edit/' . $id);
 			}
 
 			$productCategory = new ProductCategory(Connection::getInstance());
 			$productCategory->sync($id, $categories);
 
-			if (isset($images['name']) && $images['name']) {
+			if (isset($images['name'][0]) && $images['name'][0]) {
 
 				if (!Validator::validateImagesFile($images)) {
 					Flash::add('error', 'Imagens enviadas não são válidas!');
-					return header('Location: ' . HOME . '/admin/products/edit' . $id);
+					return header('Location: ' . HOME . '/admin/products/edit/' . $id);
 				}
 
 				$upload = new Upload();
@@ -146,7 +147,7 @@ class ProductsController
 			}
 
 			Flash::add('success', 'Produto actualizado com sucesso!');
-			return header('Location: ' . HOME . '/admin/products/edit' . $id);
+			return header('Location: ' . HOME . '/admin/products/edit/' . $id);
 		}
 
 		$view = (new View('admin/products/edit.phtml'));
