@@ -31,7 +31,7 @@ abstract class Entity
 
 	public function find(int $id, $fields = '*'): array
 	{
-		return current($this->where(['id' => $id], '', $fields));
+		return $this->where(['id' => $id], '', $fields);
 	}
 
 	public function where(array $conditions, $operator = ' AND ', $fields = '*'): array
@@ -57,6 +57,8 @@ abstract class Entity
 		if (!$get->rowCount()) {
 			throw new \Exception("Nada encontrado para esta consulta!");
 		}
+
+		if ($get->rowCount() == 1) return $get->fetch(\PDO::FETCH_ASSOC);
 
 		return $get->fetchAll(\PDO::FETCH_ASSOC);
 	}
