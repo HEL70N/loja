@@ -99,6 +99,8 @@ class ProductsController
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$data = $_POST;
 			$images = $_FILES['images'];
+			$categories = $data['categories'];
+
 			$data = Sanitizer::sanitizeData($data, Product::$filters);
 
 			if (!Validator::validateRequiredFields($data)) {
@@ -116,6 +118,9 @@ class ProductsController
 				Flash::add('error', 'Erro actualizar produto!');
 				return header('Location: ' . HOME . '/admin/products/edit' . $id);
 			}
+
+			$productCategory = new ProductCategory(Connection::getInstance());
+			$productCategory->sync($id, $categories);
 
 			if (isset($images['name']) && $images['name']) {
 

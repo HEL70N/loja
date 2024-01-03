@@ -106,13 +106,13 @@ abstract class Entity
 
 		if (is_array($id)) {
 			$bind = $id;
-			$field = array_keys($id);
+			$field = array_keys($id)[0];
 		} else {
 			$bind = ['id' => $id];
 			$field = 'id';
 		}
 
-		$sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $field . ' = :id';
+		$sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $field . ' = :' . $field;
 
 		$delete = $this->bind($sql, $bind);
 

@@ -18,10 +18,10 @@ class ProductCategory extends Entity
         foreach ($data as $d) {
             $saveManyToMany = [
                 'product_id' => $productId,
-                'category' => $d
+                'category_id' => $d
             ];
-            
-            $this->insert($data);
+
+            $this->insert($saveManyToMany);
         }
     }
 }
