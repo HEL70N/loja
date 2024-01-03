@@ -28,6 +28,7 @@ class ProductsController
 	{
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$data = $_POST;
+
 			$categories = $data['categories'];
 
 			$images = $_FILES['images'];
@@ -42,6 +43,7 @@ class ProductsController
 			$data['slug'] = (new SlugGenerator())->generate($data['name']);
 			$data['price'] = str_replace('.', '', $data['price']);
 			$data['price'] = str_replace(',', '.', $data['price']);
+			$data['is_active'] = $data['is_active'] == 'A' ? 1 : 0;
 
 			$product = new Product(Connection::getInstance());
 			$productId = $product->insert($data);
@@ -126,7 +128,7 @@ class ProductsController
 
 				if (!Validator::validateImagesFile($images)) {
 					Flash::add('error', 'Imagens enviadas não são válidas!');
-					return header('Location: ' . HOME . '/admin/products/new');
+					return header('Location: ' . HOME . '/admin/products/edit' . $id);
 				}
 
 				$upload = new Upload();
