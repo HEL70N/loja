@@ -4,14 +4,18 @@
     <?php foreach ($this->products as $key => $product) : ?>
         <div class="col-md-4">
             <div class="card">
-                <img class="card-img-top" alt="Card image cap" src="https://placeimg.com/640/280/any" class="img-fluid">
+                <?php if ($product['image']) : ?>
+                    <img class="card-img-top" alt="Card image cap" src="<?= HOME; ?>/uploads/products/<?= $product['image']; ?>" class="img-fluid">
+                <?php else : ?>
+                    <img class="card-img-top" alt="Card image cap" src="" class="img-fluid">
+                <?php endif; ?>
                 <div class="card-body">
-                    <h5 class="card-title"><?= $product['name']; ?></h2>
-                        <p class="card-text">
-                            <?= $product['description']; ?>
-                        </p>
-                        <h4>R$ <?= number_format($product['price'], 2, ',', '.'); ?></h4>
-                        <a href="<?= HOME; ?>/product/view/<?= $product['slug']; ?>" class="btn btn-success">Ver Mais</a>
+                    <h3 class="card-title"><?= $product['name']; ?></h3>
+                    <p class="card-text">
+                        <?= $product['description']; ?>
+                    </p>
+                    <h4>R$ <?= number_format($product['price'], 2, ',', '.'); ?></h4>
+                    <a href="<?= HOME; ?>/product/view/<?= $product['slug']; ?>" class="btn btn-success">Ver Mais</a>
                 </div>
             </div>
         </div>

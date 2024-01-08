@@ -43,4 +43,15 @@ class Product extends Entity
 
         return $productData;
     }
+
+    public function getAllProductsWithThumb()
+    {
+        $sql = 
+        'SELECT products.*, (SELECT image FROM products_images WHERE product_id = products.id LIMIT 1) AS image FROM products
+        ';
+
+        $product = $this->conn->query($sql);
+
+        return $product->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

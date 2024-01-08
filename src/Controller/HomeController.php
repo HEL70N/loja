@@ -11,8 +11,8 @@ class HomeController
 	public function index()
 	{
 		$view = new View('site/index.phtml');
-		$view->products = (new Product(Connection::getInstance()))->findAll();
-		
+		$view->products = (new Product(Connection::getInstance()))->getAllProductsWithThumb();
+
 		return $view->render();
 	}
 }
