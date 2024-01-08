@@ -1,45 +1,65 @@
-<?php require VIEWS_PATH . '/includes/header.phtml';?>
+<?php require VIEWS_PATH . '/includes/header.phtml'; ?>
 <div class="row">
 
     <div class="col-md-12">
-       <?php require VIEWS_PATH . '/includes/messages.phtml';?>
+        <?php require VIEWS_PATH . '/includes/messages.phtml'; ?>
     </div>
 
     <div class="col-12">
-        <h2><?=$this->product['name'];?></h2>
+        <h2><?= $this->product['name']; ?></h2>
         <hr>
     </div>
-    
+
 </div>
 <div class="row">
     <div class="col-6">
-        <img src="https://placeimg.com/640/280/any" alt="" class="img-fluid">
+        <div class="col-12">
+            <?php if ($this->lgPhoto['image']) : ?>
+                <img src="<?= HOME; ?>/uploads/products/<?= $this->lgPhoto['image']; ?>" alt="Foto do Produto <?= $this->product['name']; ?>" class="img-fluid">
+            <?php else : ?>
+                <img class="card-img-top" alt="Card image cap" src="" class="img-fluid">
+            <?php endif; ?>
+        </div>
+
+        <div class="row">
+            <?php foreach ($this->product['images'] as $image) : ?>
+                <div class="col-2">
+                    <img src="<?= HOME; ?>/uploads/products/<?= $image['image']; ?>" alt="Foto do Produto <?= $this->product['name']; ?>" class="img-fluid">
+                    <?php if ($image['image']) : ?>
+                        <img class="card-img-top" alt="Card image cap" src="<?= HOME; ?>/uploads/products/<?= $product['image']; ?>" class="img-fluid">
+                    <?php else : ?>
+                        <img class="card-img-top" alt="Card image cap" src="" class="img-fluid">
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
     </div>
     <div class="col-6">
         <p>
-            <?=$this->product['content'];?>
+            <?= $this->product['content']; ?>
         </p>
         <p>
-            <h4>R$ <?=number_format($this->product['price'], 2, ',', '.');?></h4>
+        <h4>R$ <?= number_format($this->product['price'], 2, ',', '.'); ?></h4>
         </p>
         <p>
-            <form action="<?=HOME;?>/cart/add" method="post">
-                
-                <input type="hidden" name="name" value="<?=$this->product['name'];?>">
-                <input type="hidden" name="price" value="<?=$this->product['price'];?>">
-                <input type="hidden" name="slug" value="<?=$this->product['slug'];?>">
+        <form action="<?= HOME; ?>/cart/add" method="post">
 
-                <div class="form-group col-3">
-                    <label>Quantidade</label>
-                    <input type="number" name="qtd" value="1" class="form-control">
-                </div>
+            <input type="hidden" name="name" value="<?= $this->product['name']; ?>">
+            <input type="hidden" name="price" value="<?= $this->product['price']; ?>">
+            <input type="hidden" name="slug" value="<?= $this->product['slug']; ?>">
 
-                <button class="btn btn-lg btn-danger" type="submit">
-                    Adicionar no carrinho
-                </button>
+            <div class="form-group col-3">
+                <label>Quantidade</label>
+                <input type="number" name="qtd" value="1" class="form-control">
+            </div>
 
-            </form>
+            <button class="btn btn-lg btn-danger" type="submit">
+                Adicionar no carrinho
+            </button>
+
+        </form>
         </p>
     </div>
 </div>
-<?php require VIEWS_PATH . '/includes/footer.phtml';?>
+<?php require VIEWS_PATH . '/includes/footer.phtml'; ?>

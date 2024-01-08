@@ -15,7 +15,7 @@ class Product extends Entity
         'is_active' => FILTER_UNSAFE_RAW
     ];
 
-    public function getProductWithImagesById($product_id)
+    public function getProductWithImagesById($product, $isSlug = false)
     {
         $sql = 'SELECT
                     p.*, pi.id AS image_id, 
@@ -24,10 +24,16 @@ class Product extends Entity
                     products p 
                 INNER JOIN
                     products_images pi ON pi.product_id = p.id 
-                WHERE p.id = :productId';
+                ';
+
+        if ($isSlug) {
+            $sql .= " WHERE p.slug = :product";
+        } else {
+            $sql .= " WHERE p.id = :product";
+        }
 
         $select = $this->conn->prepare($sql);
-        $select->bindValue(':productId', $product_id, \PDO::PARAM_INT);
+        $select->bindValue(':product', $product, $isSlug ? \PDO::PARAM_STR : \PDO::PARAM_INT);
         $select->execute();
 
         $productData = [];
@@ -38,6 +44,7 @@ class Product extends Entity
             $productData['content'] = $product['content'];
             $productData['price'] = $product['price'];
             $productData['is_active'] = $product['is_active'];
+            $productData['slug'] = $product['slug'];
             $productData['images'][] = ['id' => $product['image_id'], 'image' => $product['image']];
         }
 
@@ -46,8 +53,8 @@ class Product extends Entity
 
     public function getAllProductsWithThumb()
     {
-        $sql = 
-        'SELECT products.*, (SELECT image FROM products_images WHERE product_id = products.id LIMIT 1) AS image FROM products
+        $sql =
+            'SELECT products.*, (SELECT image FROM products_images WHERE product_id = products.id LIMIT 1) AS image FROM products
         ';
 
         $product = $this->conn->query($sql);
