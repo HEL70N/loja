@@ -35,4 +35,29 @@ class CartController
             return header('Location: ' . HOME . '/product/view/' . $product['slug']);
         }
     }
+
+    public function cancel()
+    {
+        Session::remove('cart');
+
+        Flash::add('success', 'Carrinho cancelado com sucesso!');
+        return header('Location: ' . HOME . '/cart');
+    }
+
+    public function remove($slug)
+    {
+        $cart = Session::get('cart');
+
+        if (is_null($cart)) return header('Location: ' . HOME);
+
+        $cart = array_filter($cart, function ($item) use ($slug) {
+            return $item['slug'] != $slug;
+        });
+
+        $cart = count($cart) == 0 ? null : $cart;
+
+        Session::add('cart', $cart);
+
+        return header('Location: ' . HOME . '/cart');
+    }
 }
