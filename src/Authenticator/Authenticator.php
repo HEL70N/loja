@@ -1,4 +1,5 @@
 <?php
+
 namespace Code\Authenticator;
 
 use Code\Entity\User;
@@ -19,14 +20,14 @@ class Authenticator
 
 	public function login(array $credentials)
 	{
-		$user = current($this->user->where([
+		$user = $this->user->where([
 			'email' => $credentials['email'],
-		]));
+		]);
 
-		if(!$user){
+		if (!$user) {
 			return false;
 		}
-		if(!PasswordHash::check($credentials['password'], $user['password'])) {
+		if (!PasswordHash::check($credentials['password'], $user['password'])) {
 			return false;
 		}
 
@@ -37,7 +38,7 @@ class Authenticator
 
 	public function logout()
 	{
-		if(Session::has('user')) {
+		if (Session::has('user')) {
 			Session::remove('user');
 		}
 		Session::clear();
