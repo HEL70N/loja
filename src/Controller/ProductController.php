@@ -11,7 +11,7 @@ class ProductController
     public function view($slug)
     {
         $product = (new Product(Connection::getInstance()))->getProductWithImagesById($slug, true);
-        $lgPhoto = array_shift($product['images']);
+        $lgPhoto = isset($product['images']) && count($product['images']) ? array_shift($product['images']) : false;
 
         $view = new View('site/single.phtml');
         $view->product = $product;

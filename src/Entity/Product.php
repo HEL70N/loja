@@ -22,7 +22,7 @@ class Product extends Entity
                     pi.image 
                 FROM
                     products p 
-                INNER JOIN
+                LEFT JOIN
                     products_images pi ON pi.product_id = p.id 
                 ';
 
