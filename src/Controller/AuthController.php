@@ -1,4 +1,5 @@
 <?php
+
 namespace Code\Controller;
 
 use Code\Authenticator\Authenticator;
@@ -11,17 +12,16 @@ class AuthController
 {
 	public function login()
 	{
-		if($_SERVER['REQUEST_METHOD'] == 'POST') {
-			var_dump($_POST);
+		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$user = new User(Connection::getInstance());
 			$authenticator = new Authenticator($user);
 
-			if(!$authenticator->login($_POST)) {
-				Flash::add("warning","Usuário ou senha incorretos!");
+			if (!$authenticator->login($_POST)) {
+				Flash::add("warning", "Usuário ou senha incorretos!");
 				return header("Location: " . HOME . '/auth/login');
 			}
 
-			Flash::add("success","Usuário logado com suceso!");
+			Flash::add("success", "Usuário logado com suceso!");
 			return header("Location: " . HOME . '/admin/products');
 		}
 		$view = new View('auth/index.phtml');

@@ -60,4 +60,12 @@ class CartController
 
         return header('Location: ' . HOME . '/cart');
     }
+
+    public function checkout()
+    {
+        if (!Session::has('user')) {
+            return header('Location: ' . HOME . '/store/login');
+        }
+        
+    }
 }
