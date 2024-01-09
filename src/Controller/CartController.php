@@ -66,6 +66,7 @@ class CartController
         if (!Session::has('user')) {
             return header('Location: ' . HOME . '/store/login');
         }
-        
+
+        var_dump(Session::get('user'));
     }
 }

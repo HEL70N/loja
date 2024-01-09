@@ -11,7 +11,7 @@ class User extends Entity
 	static $filters = [
 		'first_name' => FILTER_UNSAFE_RAW,
 		'last_name' => FILTER_UNSAFE_RAW,
-		'username' => FILTER_UNSAFE_RAW,
+		'email' => FILTER_UNSAFE_RAW,
 		'password' => FILTER_UNSAFE_RAW,
 		'password_confirm' => FILTER_UNSAFE_RAW,
 	];

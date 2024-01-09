@@ -3,28 +3,23 @@
 <div class="container">
 
     <div class="col-md-12">
-		<?php require VIEWS_PATH . 'includes/messages.phtml';?>
+        <?php require VIEWS_PATH . 'includes/messages.phtml'; ?>
     </div>
 
-	<div class="col-md-12">
-		<h1>Users - <small>Cadastrar novo usuário</small></h1>
-		<hr>
-	</div>
-	<div class="col-md-12">
-		<form method="post" action="<?=HOME;?>/users/new">
-			<div class="form-group">
-				<label for="exampleInputEmail1">Nome</label>
-				<input type="text" name="first_name" class="form-control">
-			</div>
+    <div class="col-md-12">
+        <h1>Users - <small>Cadastrar novo usuário</small></h1>
+        <hr>
+    </div>
+    <div class="col-md-12">
+        <form method="post" action="<?= HOME; ?>/users/new">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Nome</label>
+                <input type="text" name="first_name" class="form-control">
+            </div>
 
             <div class="form-group">
                 <label for="exampleInputEmail1">Sobrenome</label>
                 <input type="text" name="last_name" class="form-control">
-            </div>
-
-			<div class="form-group">
-				<label for="exampleInputPassword1">Username</label>
-                <input type="text" name="username" class="form-control">
             </div>
 
             <div class="form-group">
@@ -38,7 +33,7 @@
             </div>
 
             <button type="submit" class="btn btn-success btn-lg pull-right">Salvar Usuário</button>
-		</form>
-	</div>
+        </form>
+    </div>
 </div>
-<?php require VIEWS_PATH . '/admin/includes/footer.phtml';?>
+<?php require VIEWS_PATH . '/admin/includes/footer.phtml'; ?>

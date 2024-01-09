@@ -17,8 +17,13 @@
         <h3>Registrar</h3>
         <form action="<?= HOME; ?>/store/register" method="post">
             <div class="form-group">
-                <label>Nome Completo</label>
-                <input type="text" class="form-control" name="name">
+                <label>Nome</label>
+                <input type="text" class="form-control" name="first_name">
+            </div>
+
+            <div class="form-group">
+                <label>Sobrenome</label>
+                <input type="text" class="form-control" name="last_name">
             </div>
 
             <div class="form-group">
@@ -29,6 +34,11 @@
             <div class="form-group">
                 <label>Senha</label>
                 <input type="password" class="form-control" name="password">
+            </div>
+
+            <div class="form-group">
+                <label>Confirmar Senha</label>
+                <input type="password" class="form-control" name="password_confirm">
             </div>
 
             <button class="btn btn-success">Cadastrar</button>
