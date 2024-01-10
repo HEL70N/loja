@@ -69,4 +69,15 @@ class CartController
 
         var_dump(Session::get('user'));
     }
+
+    private function pagSeguroCheckoutSession()
+    {
+        if (!Session::has('pagseguro_session')) {
+            $sessionCode = \PagSeguro\Services\Session::create(
+                \PagSeguro\Configuration\Configure::getAccountCredentials()
+            );
+        }
+
+        Session::add('pagseguro_session', $sessionCode->getResult());
+    }
 }

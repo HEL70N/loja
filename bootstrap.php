@@ -18,7 +18,11 @@ define('DB_CHARSET', 'UTF8');
 /**
  * PagSeguro Environment
  */
-putenv('PAGSEGURO_ENV=SANDBOX');
+putenv('PAGSEGURO_ENV=sandbox');
 putenv('PAGSEGURO_EMAIL=nandokstro@gmail.com');
 putenv('PAGSEGURO_TOKEN_SANDBOX=');
 putenv('PAGSEGURO_CHARSET UTF-8');
+
+\PagSeguro\Library::initialize();
+\PagSeguro\Library::cmsVersion()->setName("Nome")->setRelease("1.0.0");
+\PagSeguro\Library::moduleVersion()->setName("Nome")->setRelease("1.0.0");
