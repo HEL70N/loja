@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'PagSeguro\\' => array($vendorDir . '/pagseguro/pagseguro-php-sdk/source'),
     'Code\\' => array($baseDir . '/src'),
     'Ausi\\SlugGenerator\\' => array($vendorDir . '/ausi/slug-generator/src'),
 );
